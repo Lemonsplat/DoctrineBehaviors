@@ -81,6 +81,15 @@ trait Sluggable
 
             // generate the slug itself
             $sluggableText = implode($usableValues, ' ');
+
+            //Fix for Polish characters
+            $from = ['ą','ż','ź','ś','ł','ę','ć','ó','ń','Ą','Ż','Ź','Ś','Ł','Ę','Ć','Ó','Ń'];
+            $to = ['a','z','z','s','l','e','c','o','n','A','Z','Z','S','L','E','C','O','N'];
+            $sluggableText = str_replace($from, $to, $sluggableText);
+
+            //And trim for html tags, it probably should be parametrized
+            $sluggableText = strip_tags($sluggableText);
+
             $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->getSlugDelimiter() ) );
             $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
 
